@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNKI Helper 调试页面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .debug-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+        
+        .debug-section h3 {
+            color: #555;
+            margin-top: 0;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .debug-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .debug-button:hover {
+            background: #0056b3;
+        }
+        
+        .debug-output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 FK_CNKI 调试页面</h1>
+        
+        <div class="debug-section">
+            <h3>📋 扩展状态检查</h3>
+            <button class="debug-button" onclick="checkExtensionStatus()">检查扩展状态</button>
+            <button class="debug-button" onclick="checkPermissions()">检查权限</button>
+            <button class="debug-button" onclick="testStorage()">测试存储</button>
+            <button class="debug-button" onclick="testMessaging()">测试消息传递</button>
+            <div id="extensionStatus" class="debug-output">点击按钮开始检查...</div>
+        </div>
+
+        <div class="debug-section">
+            <h3>🧪 功能测试</h3>
+            <button class="debug-button" onclick="testCopyRestrictions()">测试复制限制解除</button>
+            <button class="debug-button" onclick="testUIInjection()">测试UI注入</button>
+            <button class="debug-button" onclick="testSettings()">测试设置功能</button>
+            <div id="functionTest" class="debug-output">点击按钮开始测试...</div>
+        </div>
+
+        <div class="debug-section">
+            <h3>📊 系统信息</h3>
+            <button class="debug-button" onclick="showSystemInfo()">显示系统信息</button>
+            <button class="debug-button" onclick="showConsoleLogs()">显示控制台日志</button>
+            <div id="systemInfo" class="debug-output">点击按钮显示信息...</div>
+        </div>
+
+        <div class="debug-section">
+            <h3>🔍 错误诊断</h3>
+            <button class="debug-button" onclick="diagnoseErrors()">诊断错误</button>
+            <button class="debug-button" onclick="clearLogs()">清除日志</button>
+            <div id="errorDiagnosis" class="debug-output">点击按钮开始诊断...</div>
+        </div>
+    </div>
+
+    <script>
+        // 检查扩展状态
+        async function checkExtensionStatus() {
+            const output = document.getElementById('extensionStatus');
+            output.textContent = '正在检查扩展状态...\n';
+            
+            try {
+                // 检查扩展是否已安装
+                if (typeof chrome !== 'undefined' && chrome.runtime) {
+                    output.textContent += '✅ Chrome扩展API可用\n';
+                    
+                    // 检查扩展ID
+                    if (chrome.runtime.id) {
+                        output.textContent += `✅ 扩展ID: ${chrome.runtime.id}\n`;
+                    } else {
+                        output.textContent += '❌ 无法获取扩展ID\n';
+                    }
+                    
+                    // 检查扩展URL
+                    const extensionURL = chrome.runtime.getURL('');
+                    output.textContent += `✅ 扩展URL: ${extensionURL}\n`;
+                    
+                } else {
+                    output.textContent += '❌ Chrome扩展API不可用\n';
+                }
+                
+                // 检查CNKI Helper特定元素
+                const toolbar = document.getElementById('cnki-helper-toolbar');
+                const copyFixStyle = document.getElementById('cnki-helper-copy-fix');
+                
+                if (toolbar) {
+                    output.textContent += '✅ FK_CNKI工具栏已注入\n';
+                } else {
+                    output.textContent += '❌ FK_CNKI工具栏未注入\n';
+                }
+                
+                if (copyFixStyle) {
+                    output.textContent += '✅ 复制限制解除样式已注入\n';
+                } else {
+                    output.textContent += '❌ 复制限制解除样式未注入\n';
+                }
+                
+            } catch (error) {
+                output.textContent += `❌ 检查过程中出错: ${error.message}\n`;
+            }
+        }
+
+        // 检查权限
+        async function checkPermissions() {
+            const output = document.getElementById('extensionStatus');
+            output.textContent = '正在检查权限...\n';
+            
+            try {
+                // 检查存储权限
+                try {
+                    await chrome.storage.sync.get('test');
+                    output.textContent += '✅ 存储权限正常\n';
+                } catch (error) {
+                    output.textContent += `❌ 存储权限异常: ${error.message}\n`;
+                }
+                
+                // 检查标签页权限
+                try {
+                    await chrome.tabs.query({ active: true, currentWindow: true });
+                    output.textContent += '✅ 标签页权限正常\n';
+                } catch (error) {
+                    output.textContent += `❌ 标签页权限异常: ${error.message}\n`;
+                }
+                
+                // 检查脚本注入权限
+                try {
+                    await chrome.scripting.executeScript({
+                        target: { tabId: chrome.tabs.TAB_ID_NONE },
+                        func: () => 'test'
+                    });
+                    output.textContent += '✅ 脚本注入权限正常\n';
+                } catch (error) {
+                    output.textContent += `❌ 脚本注入权限异常: ${error.message}\n`;
+                }
+                
+            } catch (error) {
+                output.textContent += `❌ 权限检查过程中出错: ${error.message}\n`;
+            }
+        }
+
+        // 测试存储
+        async function testStorage() {
+            const output = document.getElementById('extensionStatus');
+            output.textContent = '正在测试存储功能...\n';
+            
+            try {
+                // 测试同步存储
+                const testData = { test: 'value', timestamp: Date.now() };
+                await chrome.storage.sync.set(testData);
+                output.textContent += '✅ 同步存储写入成功\n';
+                
+                const result = await chrome.storage.sync.get('test');
+                if (result.test === 'value') {
+                    output.textContent += '✅ 同步存储读取成功\n';
+                } else {
+                    output.textContent += '❌ 同步存储读取失败\n';
+                }
+                
+                // 测试本地存储
+                await chrome.storage.local.set({ localTest: 'localValue' });
+                output.textContent += '✅ 本地存储写入成功\n';
+                
+                const localResult = await chrome.storage.local.get('localTest');
+                if (localResult.localTest === 'localValue') {
+                    output.textContent += '✅ 本地存储读取成功\n';
+                } else {
+                    output.textContent += '❌ 本地存储读取失败\n';
+                }
+                
+                // 清理测试数据
+                await chrome.storage.sync.remove('test');
+                await chrome.storage.local.remove('localTest');
+                output.textContent += '✅ 测试数据清理完成\n';
+                
+            } catch (error) {
+                output.textContent += `❌ 存储测试过程中出错: ${error.message}\n`;
+            }
+        }
+
+        // 测试消息传递
+        async function testMessaging() {
+            const output = document.getElementById('extensionStatus');
+            output.textContent = '正在测试消息传递...\n';
+            
+            try {
+                // 测试发送消息到background script
+                const response = await chrome.runtime.sendMessage({
+                    type: 'GET_SETTINGS'
+                });
+                
+                if (response && response.autoDownload !== undefined) {
+                    output.textContent += '✅ 消息传递到background script成功\n';
+                    output.textContent += `   设置数据: ${JSON.stringify(response, null, 2)}\n`;
+                } else {
+                    output.textContent += '❌ 消息传递到background script失败\n';
+                }
+                
+            } catch (error) {
+                output.textContent += `❌ 消息传递测试过程中出错: ${error.message}\n`;
+            }
+        }
+
+        // 测试复制限制解除
+        function testCopyRestrictions() {
+            const output = document.getElementById('functionTest');
+            output.textContent = '正在测试复制限制解除功能...\n';
+            
+            // 检查样式注入
+            const copyFixStyle = document.getElementById('cnki-helper-copy-fix');
+            if (copyFixStyle) {
+                output.textContent += '✅ 复制限制解除样式已注入\n';
+                
+                // 检查样式内容
+                const styleContent = copyFixStyle.textContent;
+                if (styleContent.includes('user-select: auto !important')) {
+                    output.textContent += '✅ 样式内容正确\n';
+                } else {
+                    output.textContent += '❌ 样式内容不正确\n';
+                }
+            } else {
+                output.textContent += '❌ 复制限制解除样式未注入\n';
+            }
+            
+            // 测试文本选择
+            const testText = document.createElement('div');
+            testText.textContent = '这是测试文本，应该可以选择';
+            testText.style.cssText = 'user-select: none; padding: 10px; border: 1px solid #ccc;';
+            document.body.appendChild(testText);
+            
+            const selection = window.getSelection();
+            selection.selectAllChildren(testText);
+            
+            if (selection.toString().length > 0) {
+                output.textContent += '✅ 文本选择功能正常\n';
+            } else {
+                output.textContent += '❌ 文本选择功能异常\n';
+            }
+            
+            // 清理测试元素
+            document.body.removeChild(testText);
+        }
+
+        // 测试UI注入
+        function testUIInjection() {
+            const output = document.getElementById('functionTest');
+            output.textContent = '正在测试UI注入功能...\n';
+            
+            // 检查工具栏
+            const toolbar = document.getElementById('cnki-helper-toolbar');
+            if (toolbar) {
+                output.textContent += '✅ 工具栏已注入\n';
+                
+                // 检查工具栏内容
+                const buttons = toolbar.querySelectorAll('.toolbar-btn');
+                output.textContent += `   找到 ${buttons.length} 个工具栏按钮\n`;
+                
+                // 检查复制状态指示器
+                const copyStatus = toolbar.querySelector('.copy-status');
+                if (copyStatus) {
+                    output.textContent += '✅ 复制状态指示器已显示\n';
+                } else {
+                    output.textContent += '❌ 复制状态指示器未显示\n';
+                }
+            } else {
+                output.textContent += '❌ 工具栏未注入\n';
+            }
+            
+            // 检查消息容器
+            const messageContainer = document.getElementById('cnki-message-container');
+            if (messageContainer) {
+                output.textContent += '✅ 消息容器已注入\n';
+            } else {
+                output.textContent += '❌ 消息容器未注入\n';
+            }
+        }
+
+        // 测试设置功能
+        async function testSettings() {
+            const output = document.getElementById('functionTest');
+            output.textContent = '正在测试设置功能...\n';
+            
+            try {
+                // 测试设置读取
+                const settings = await chrome.storage.sync.get({
+                    autoDownload: false,
+                    enhanceSearch: true,
+                    quickAccess: true
+                });
+                
+                output.textContent += '✅ 设置读取成功\n';
+                output.textContent += `   当前设置: ${JSON.stringify(settings, null, 2)}\n`;
+                
+                // 测试设置更新
+                const newSettings = { testSetting: 'testValue' };
+                await chrome.storage.sync.set(newSettings);
+                output.textContent += '✅ 设置更新成功\n';
+                
+                // 验证设置更新
+                const updatedSettings = await chrome.storage.sync.get('testSetting');
+                if (updatedSettings.testSetting === 'testValue') {
+                    output.textContent += '✅ 设置更新验证成功\n';
+                } else {
+                    output.textContent += '❌ 设置更新验证失败\n';
+                }
+                
+                // 清理测试设置
+                await chrome.storage.sync.remove('testSetting');
+                output.textContent += '✅ 测试设置清理完成\n';
+                
+            } catch (error) {
+                output.textContent += `❌ 设置测试过程中出错: ${error.message}\n`;
+            }
+        }
+
+        // 显示系统信息
+        function showSystemInfo() {
+            const output = document.getElementById('systemInfo');
+            output.textContent = '系统信息:\n';
+            output.textContent += `用户代理: ${navigator.userAgent}\n`;
+            output.textContent += `平台: ${navigator.platform}\n`;
+            output.textContent += `语言: ${navigator.language}\n`;
+            output.textContent += `Cookie启用: ${navigator.cookieEnabled}\n`;
+            output.textContent += `在线状态: ${navigator.onLine}\n`;
+            output.textContent += `当前URL: ${window.location.href}\n`;
+            output.textContent += `页面标题: ${document.title}\n`;
+            output.textContent += `页面加载时间: ${new Date().toLocaleString()}\n`;
+        }
+
+        // 显示控制台日志
+        function showConsoleLogs() {
+            const output = document.getElementById('systemInfo');
+            output.textContent = '控制台日志:\n';
+            output.textContent += '注意: 这里只能显示页面加载后的日志\n';
+            output.textContent += '请查看浏览器开发者工具的控制台获取完整日志\n';
+        }
+
+        // 诊断错误
+        function diagnoseErrors() {
+            const output = document.getElementById('errorDiagnosis');
+            output.textContent = '开始错误诊断...\n';
+            
+            // 检查常见错误
+            let errorCount = 0;
+            
+            // 检查扩展API
+            if (typeof chrome === 'undefined') {
+                output.textContent += '❌ Chrome扩展API不可用\n';
+                errorCount++;
+            }
+            
+            // 检查运行时
+            if (!chrome.runtime) {
+                output.textContent += '❌ Chrome运行时不可用\n';
+                errorCount++;
+            }
+            
+            // 检查存储
+            if (!chrome.storage) {
+                output.textContent += '❌ Chrome存储API不可用\n';
+                errorCount++;
+            }
+            
+            // 检查标签页
+            if (!chrome.tabs) {
+                output.textContent += '❌ Chrome标签页API不可用\n';
+                errorCount++;
+            }
+            
+            // 检查脚本注入
+            if (!chrome.scripting) {
+                output.textContent += '❌ Chrome脚本注入API不可用\n';
+                errorCount++;
+            }
+            
+            if (errorCount === 0) {
+                output.textContent += '✅ 所有基本API检查通过\n';
+            } else {
+                output.textContent += `❌ 发现 ${errorCount} 个API问题\n`;
+            }
+        }
+
+        // 清除日志
+        function clearLogs() {
+            document.getElementById('extensionStatus').textContent = '';
+            document.getElementById('functionTest').textContent = '';
+            document.getElementById('systemInfo').textContent = '';
+            document.getElementById('errorDiagnosis').textContent = '';
+        }
+
+        // 页面加载完成后自动检查扩展状态
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(checkExtensionStatus, 1000);
+        });
+    </script>
+</body>
+</html>

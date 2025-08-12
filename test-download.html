@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FK_CNKI 下载功能测试页面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        .test-section h3 {
+            color: #555;
+            margin-top: 0;
+        }
+        
+        .download-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .download-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #1e7e34;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-info:hover {
+            background: #117a8b;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .instructions h4 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        
+        .test-result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 FK_CNKI 下载功能测试页面</h1>
+        
+        <div class="instructions">
+            <h4>📋 测试说明</h4>
+            <p>这个页面模拟了CNKI知网页面中常见的PDF下载按钮，用于测试FK_CNKI插件的智能下载关联功能。</p>
+            <p><strong>测试目的：</strong>验证插件能否自动检测页面中的下载按钮，并创建关联的智能下载按钮。</p>
+        </div>
+        
+        <div class="test-section">
+            <h3>🧪 模拟CNKI下载按钮</h3>
+            <p>以下是模拟的CNKI页面下载按钮，FK_CNKI插件应该能够检测到这些按钮并创建关联：</p>
+            
+            <div class="download-buttons">
+                <!-- 模拟PDF下载按钮 -->
+                <a href="https://example.com/paper1.pdf" class="download-btn btn-primary" onclick="alert('PDF下载已触发')">
+                    PDF下载
+                </a>
+                
+                <!-- 模拟全文下载按钮 -->
+                <button class="download-btn btn-success" onclick="alert('全文下载已触发')">
+                    全文下载
+                </button>
+                
+                <!-- 模拟下载按钮 -->
+                <a href="https://example.com/paper2.pdf" class="download-btn btn-info" title="下载PDF文件">
+                    下载
+                </a>
+                
+                <!-- 模拟CAJ下载按钮 -->
+                <button class="download-btn btn-warning" onclick="downloadCAJ()">
+                    CAJ下载
+                </button>
+            </div>
+            
+            <div id="downloadStatus" class="status warning">
+                ⏳ 等待FK_CNKI插件检测下载按钮...
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 检测结果</h3>
+            <div id="detectionResult" class="test-result">
+                点击"开始检测"按钮开始测试...
+            </div>
+            <button onclick="startDetection()" class="download-btn btn-primary">开始检测</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>📊 功能验证</h3>
+            <div id="functionTest" class="test-result">
+                功能测试结果将在这里显示...
+            </div>
+            <button onclick="testDownloadFunction()" class="download-btn btn-success">测试下载功能</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>💡 使用提示</h3>
+            <ul>
+                <li>确保已安装FK_CNKI插件</li>
+                <li>刷新页面让插件重新检测</li>
+                <li>查看页面是否出现"智能下载"按钮</li>
+                <li>测试智能下载按钮的功能</li>
+                <li>检查浏览器控制台的日志信息</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 模拟CAJ下载功能
+        function downloadCAJ() {
+            alert('CAJ下载功能已触发');
+        }
+        
+        // 开始检测下载按钮
+        function startDetection() {
+            const resultDiv = document.getElementById('detectionResult');
+            resultDiv.textContent = '正在检测页面中的下载按钮...\n\n';
+            
+            // 检测各种类型的下载按钮
+            const downloadButtons = [];
+            
+            // 1. 检测链接类型的下载按钮
+            const downloadLinks = document.querySelectorAll('a[href*=".pdf"], a[href*="download"], a[href*="file"]');
+            downloadLinks.forEach(link => {
+                downloadButtons.push({
+                    type: '链接下载',
+                    text: link.textContent.trim(),
+                    href: link.href,
+                    onclick: link.getAttribute('onclick') || '无'
+                });
+            });
+            
+            // 2. 检测按钮类型的下载按钮
+            const downloadBtns = document.querySelectorAll('button[onclick*="download"], button[onclick*="PDF"]');
+            downloadBtns.forEach(btn => {
+                downloadButtons.push({
+                    type: '按钮下载',
+                    text: btn.textContent.trim(),
+                    href: '无',
+                    onclick: btn.getAttribute('onclick') || '无'
+                });
+            });
+            
+            // 3. 检测文本内容包含下载关键词的元素
+            const allElements = document.querySelectorAll('a, button');
+            allElements.forEach(element => {
+                const text = element.textContent || element.innerText || '';
+                if (text.includes('下载') || text.includes('PDF') || text.includes('Download')) {
+                    const existing = downloadButtons.find(btn => btn.text === text.trim());
+                    if (!existing) {
+                        downloadButtons.push({
+                            type: '文本匹配',
+                            text: text.trim(),
+                            href: element.href || '无',
+                            onclick: element.getAttribute('onclick') || '无'
+                        });
+                    }
+                }
+            });
+            
+            // 显示检测结果
+            if (downloadButtons.length > 0) {
+                resultDiv.textContent += `✅ 检测到 ${downloadButtons.length} 个下载按钮：\n\n`;
+                downloadButtons.forEach((btn, index) => {
+                    resultDiv.textContent += `${index + 1}. ${btn.type}\n`;
+                    resultDiv.textContent += `   文本: ${btn.text}\n`;
+                    resultDiv.textContent += `   链接: ${btn.href}\n`;
+                    resultDiv.textContent += `   onclick: ${btn.onclick}\n\n`;
+                });
+                
+                // 更新状态
+                document.getElementById('downloadStatus').className = 'status success';
+                document.getElementById('downloadStatus').textContent = `✅ 检测到 ${downloadButtons.length} 个下载按钮`;
+            } else {
+                resultDiv.textContent += '❌ 未检测到任何下载按钮';
+                document.getElementById('downloadStatus').className = 'status error';
+                document.getElementById('downloadStatus').textContent = '❌ 未检测到下载按钮';
+            }
+        }
+        
+        // 测试下载功能
+        function testDownloadFunction() {
+            const testDiv = document.getElementById('functionTest');
+            testDiv.textContent = '正在测试下载功能...\n\n';
+            
+            // 检查FK_CNKI插件状态
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                testDiv.textContent += '✅ Chrome扩展API可用\n';
+                
+                // 检查是否已注入FK_CNKI
+                const toolbar = document.getElementById('cnki-helper-toolbar');
+                if (toolbar) {
+                    testDiv.textContent += '✅ FK_CNKI工具栏已注入\n';
+                    
+                    // 检查智能下载按钮
+                    const enhancedBtn = document.querySelector('.cnki-download-btn.enhanced-download');
+                    if (enhancedBtn) {
+                        testDiv.textContent += '✅ 智能下载按钮已创建\n';
+                        testDiv.textContent += `   按钮文本: ${enhancedBtn.textContent}\n`;
+                        testDiv.textContent += `   按钮标题: ${enhancedBtn.title}\n`;
+                    } else {
+                        testDiv.textContent += '❌ 智能下载按钮未创建\n';
+                    }
+                } else {
+                    testDiv.textContent += '❌ FK_CNKI工具栏未注入\n';
+                }
+            } else {
+                testDiv.textContent += '❌ Chrome扩展API不可用\n';
+            }
+            
+            testDiv.textContent += '\n💡 提示：如果插件正常工作，您应该能看到：\n';
+            testDiv.textContent += '1. 页面顶部有FK_CNKI工具栏\n';
+            testDiv.textContent += '2. 下载按钮旁边有"智能下载"按钮\n';
+            testDiv.textContent += '3. 点击智能下载按钮能触发对应的下载功能\n';
+        }
+        
+        // 页面加载完成后自动检测
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                startDetection();
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNKI复制限制测试页面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+        
+        .test-section h3 {
+            color: #555;
+            margin-top: 0;
+        }
+        
+        .test-content {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        
+        .restricted-text {
+            /* 模拟CNKI的复制限制 */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .normal-text {
+            color: #333;
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .instructions h4 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .test-button:hover {
+            background: #0056b3;
+        }
+        
+        .copy-result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔒 CNKI复制限制测试页面</h1>
+        
+        <div class="instructions">
+            <h4>📋 测试说明</h4>
+            <p>这个页面模拟了CNKI知网页面常见的文字复制限制。安装FK_CNKI插件后，这些限制应该被自动解除。</p>
+            <p><strong>测试步骤：</strong></p>
+            <ol>
+                <li>确保已安装FK_CNKI插件</li>
+                <li>尝试选择下面的文字内容</li>
+                <li>使用Ctrl+C复制选中的文字</li>
+                <li>使用Ctrl+V粘贴到下面的结果框中</li>
+                <li>检查右键菜单是否可用</li>
+            </ol>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 测试1：受限制的文字选择</h3>
+            <p>下面的文字设置了<code>user-select: none</code>，正常情况下无法选择：</p>
+            <div class="test-content restricted-text">
+                这是一段受限制的文字内容，正常情况下无法选择。这段文字包含了重要的学术信息，应该可以被自由选择和复制。
+                如果FK_CNKI插件工作正常，你现在应该能够选择这段文字了。
+            </div>
+            <div class="status warning">
+                ⚠️ 如果无法选择这段文字，说明插件可能没有正常工作
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>✅ 测试2：正常文字选择</h3>
+            <p>下面的文字没有限制，应该可以正常选择：</p>
+            <div class="test-content normal-text">
+                这是一段正常的文字内容，应该可以自由选择。这段文字包含了基本的学术信息，
+                用于对比测试复制限制解除功能的效果。
+            </div>
+            <div class="status success">
+                ✅ 这段文字应该可以正常选择
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 测试3：复制粘贴功能</h3>
+            <p>选择上面的任意文字，然后复制粘贴到这里：</p>
+            <button class="test-button" onclick="testCopy()">测试复制功能</button>
+            <button class="test-button" onclick="testPaste()">测试粘贴功能</button>
+            <button class="test-button" onclick="clearResult()">清空结果</button>
+            <div class="copy-result" id="copyResult">
+                粘贴结果将显示在这里...
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🖱️ 测试4：右键菜单</h3>
+            <p>在下面的文字上右键点击，应该能看到正常的右键菜单：</p>
+            <div class="test-content">
+                右键点击这段文字，应该能看到包含"复制"、"粘贴"等选项的右键菜单。
+                如果右键菜单被禁用，说明插件的右键限制解除功能可能有问题。
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>⌨️ 测试5：键盘快捷键</h3>
+            <p>测试常用的键盘快捷键：</p>
+            <ul>
+                <li><strong>Ctrl+A</strong>：全选页面内容</li>
+                <li><strong>Ctrl+C</strong>：复制选中内容</li>
+                <li><strong>Ctrl+V</strong>：粘贴内容</li>
+                <li><strong>Ctrl+X</strong>：剪切选中内容</li>
+            </ul>
+            <div class="status info">
+                💡 尝试使用这些快捷键，看看是否正常工作
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 插件状态检查</h3>
+            <div id="pluginStatus">
+                <div class="status warning">
+                    🔍 正在检查插件状态...
+                </div>
+            </div>
+            <button class="test-button" onclick="checkPluginStatus()">重新检查状态</button>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 测试结果记录</h3>
+            <p>请记录以下测试结果：</p>
+            <ul>
+                <li>✅ 文字选择：<input type="text" placeholder="正常/异常" style="width: 100px;"></li>
+                <li>✅ 复制功能：<input type="text" placeholder="正常/异常" style="width: 100px;"></li>
+                <li>✅ 粘贴功能：<input type="text" placeholder="正常/异常" style="width: 100px;"></li>
+                <li>✅ 右键菜单：<input type="text" placeholder="正常/异常" style="width: 100px;"></li>
+                <li>✅ 键盘快捷键：<input type="text" placeholder="正常/异常" style="width: 100px;"></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 测试复制功能
+        function testCopy() {
+            const selectedText = window.getSelection().toString();
+            if (selectedText) {
+                navigator.clipboard.writeText(selectedText).then(() => {
+                    showMessage('✅ 文字已复制到剪贴板: ' + selectedText.substring(0, 50) + '...', 'success');
+                }).catch(err => {
+                    showMessage('❌ 复制失败: ' + err.message, 'error');
+                });
+            } else {
+                showMessage('⚠️ 请先选择一些文字', 'warning');
+            }
+        }
+
+        // 测试粘贴功能
+        function testPaste() {
+            navigator.clipboard.readText().then(text => {
+                document.getElementById('copyResult').textContent = '粘贴内容: ' + text;
+                showMessage('✅ 粘贴成功', 'success');
+            }).catch(err => {
+                showMessage('❌ 粘贴失败: ' + err.message, 'error');
+            });
+        }
+
+        // 清空结果
+        function clearResult() {
+            document.getElementById('copyResult').textContent = '粘贴结果将显示在这里...';
+        }
+
+        // 显示消息
+        function showMessage(message, type) {
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(statusDiv, container.firstChild);
+            
+            setTimeout(() => {
+                if (statusDiv.parentNode) {
+                    statusDiv.parentNode.removeChild(statusDiv);
+                }
+            }, 3000);
+        }
+
+        // 检查插件状态
+        function checkPluginStatus() {
+            const statusDiv = document.getElementById('pluginStatus');
+            
+            // 检查是否有CNKI Helper的样式注入
+            const copyFixStyle = document.getElementById('cnki-helper-copy-fix');
+            const toolbar = document.getElementById('cnki-helper-toolbar');
+            
+            if (copyFixStyle && toolbar) {
+                statusDiv.innerHTML = `
+                    <div class="status success">
+                        ✅ FK_CNKI插件已激活
+                    </div>
+                    <div class="status success">
+                        ✅ 复制限制解除样式已注入
+                    </div>
+                    <div class="status success">
+                        ✅ 工具栏已显示
+                    </div>
+                `;
+            } else if (copyFixStyle) {
+                statusDiv.innerHTML = `
+                    <div class="status warning">
+                        ⚠️ 复制限制解除样式已注入，但工具栏未显示
+                    </div>
+                `;
+            } else if (toolbar) {
+                statusDiv.innerHTML = `
+                    <div class="status warning">
+                        ⚠️ 工具栏已显示，但复制限制解除样式未注入
+                    </div>
+                `;
+            } else {
+                statusDiv.innerHTML = `
+                    <div class="status error">
+                        ❌ FK_CNKI插件未激活或未正确安装
+                    </div>
+                    <div class="status warning">
+                        💡 请确保插件已安装并启用，然后刷新页面
+                    </div>
+                `;
+            }
+        }
+
+        // 页面加载完成后自动检查状态
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(checkPluginStatus, 1000);
+        });
+
+        // 监听粘贴事件
+        document.addEventListener('paste', function(e) {
+            const pastedText = e.clipboardData.getData('text');
+            if (pastedText) {
+                document.getElementById('copyResult').textContent = '粘贴内容: ' + pastedText;
+                showMessage('✅ 检测到粘贴操作', 'success');
+            }
+        });
+
+        // 监听复制事件
+        document.addEventListener('copy', function(e) {
+            const selectedText = window.getSelection().toString();
+            if (selectedText) {
+                showMessage('✅ 检测到复制操作: ' + selectedText.substring(0, 30) + '...', 'success');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+/* CNKI Helper Content Styles */
+
+/* 固定工具栏 */
+#cnki-helper-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    z-index: 10000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.toolbar-content {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    gap: 12px;
+}
+
+.toolbar-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-right: auto;
+}
+
+.toolbar-btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.toolbar-btn:hover {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
+}
+
+.toolbar-btn:active {
+    transform: translateY(1px);
+}
+
+/* 复制状态指示器 */
+.copy-status {
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.copy-status::before {
+    content: "✅";
+    font-size: 10px;
+}
+
+/* 下载按钮样式 */
+.cnki-download-btn {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.cnki-download-btn:hover {
+    background: linear-gradient(135deg, #45a049, #4CAF50);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.cnki-download-btn:active {
+    transform: translateY(0);
+}
+
+/* 搜索结果页面的下载按钮 */
+.cnki-download-btn.search-download {
+    margin: 8px 0;
+    width: 100%;
+    max-width: 120px;
+}
+
+/* 详情页面的下载按钮 */
+.cnki-download-btn.detail-download {
+    position: sticky;
+    top: 80px;
+    z-index: 1000;
+    margin: 16px 0;
+    font-size: 14px;
+    padding: 10px 20px;
+}
+
+/* 增强下载按钮样式 */
+.cnki-download-btn.enhanced-download {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.cnki-download-btn.enhanced-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.cnki-download-btn.enhanced-download:active {
+    transform: translateY(0);
+}
+
+.cnki-download-btn.enhanced-download .btn-icon {
+    font-size: 16px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-3px);
+    }
+    60% {
+        transform: translateY(-2px);
+    }
+}
+
+/* 增强下载按钮的脉冲效果 */
+.cnki-download-btn.enhanced-download::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.cnki-download-btn.enhanced-download:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* 消息通知系统 */
+#cnki-message-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 10001;
+    max-width: 300px;
+}
+
+.cnki-message {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 13px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    animation: slideInRight 0.3s ease;
+}
+
+.cnki-message-info {
+    border-left: 4px solid #2196F3;
+    color: #1976D2;
+}
+
+.cnki-message-success {
+    border-left: 4px solid #4CAF50;
+    color: #2E7D32;
+}
+
+.cnki-message-warning {
+    border-left: 4px solid #FF9800;
+    color: #F57C00;
+}
+
+.cnki-message-error {
+    border-left: 4px solid #F44336;
+    color: #D32F2F;
+}
+
+/* 消息动画 */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .toolbar-content {
+        padding: 6px 12px;
+        gap: 8px;
+    }
+    
+    .toolbar-title {
+        font-size: 12px;
+    }
+    
+    .toolbar-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    
+    .copy-status {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+    
+    #cnki-message-container {
+        right: 10px;
+        max-width: 250px;
+    }
+    
+    .cnki-message {
+        font-size: 12px;
+        padding: 10px 12px;
+    }
+
+    .cnki-download-btn.enhanced-download {
+        padding: 8px 16px;
+        font-size: 13px;
+        border-radius: 20px;
+    }
+    
+    .cnki-download-btn.enhanced-download .btn-icon {
+        font-size: 14px;
+    }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+    .cnki-message {
+        background: #2d2d2d;
+        border-color: #444;
+        color: #e0e0e0;
+    }
+    
+    .cnki-message-info {
+        color: #64B5F6;
+    }
+    
+    .cnki-message-success {
+        color: #81C784;
+    }
+    
+    .cnki-message-warning {
+        color: #FFB74D;
+    }
+    
+    .cnki-message-error {
+        color: #E57373;
+    }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+    .cnki-download-btn {
+        border: 2px solid #000;
+    }
+    
+    .cnki-message {
+        border-width: 2px;
+    }
+}
+
+/* 打印媒体查询 */
+@media print {
+    #cnki-helper-toolbar,
+    .cnki-download-btn,
+    #cnki-message-container {
+        display: none !important;
+    }
+}
+
+/* 无障碍支持 */
+@media (prefers-reduced-motion: reduce) {
+    .cnki-message {
+        animation: none;
+    }
+    
+    .toolbar-btn:hover,
+    .cnki-download-btn:hover {
+        transform: none;
+    }
+}
+
+/* 针对CNKI页面的特殊样式覆盖 */
+.cnki-helper-copy-fix {
+    /* 确保我们的样式优先级最高 */
+    position: relative;
+    z-index: 9999;
+}
+
+/* 移除CNKI页面可能存在的选择限制 */
+.content *,
+.article-content *,
+.text-content *,
+.paper-content * {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+}
+
+/* 确保文本内容可以选择 */
+p, div, span, h1, h2, h3, h4, h5, h6, li, td, th {
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+}

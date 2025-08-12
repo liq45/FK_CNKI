@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FK_CNKI</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>FK_CNKI</h1>
+            <p class="subtitle">解除知网限制，去TM的！</p>
+        </header>
+        
+        <main class="main">
+            <section class="feature-section">
+                <h3>功能开关</h3>
+                <div class="setting-item">
+                    <label for="autoDownload">自动下载</label>
+                    <input type="checkbox" id="autoDownload" class="toggle-switch">
+                </div>
+                <div class="setting-item">
+                    <label for="enhanceSearch">搜索增强</label>
+                    <input type="checkbox" id="enhanceSearch" class="toggle-switch">
+                </div>
+                <div class="setting-item">
+                    <label for="quickAccess">快速访问</label>
+                    <input type="checkbox" id="quickAccess" class="toggle-switch">
+                </div>
+            </section>
+            
+            <section class="feature-section">
+                <h3>快速操作</h3>
+                <div class="button-group">
+                    <button id="openCNKI" class="btn btn-primary">打开知网</button>
+                    <button id="searchPapers" class="btn btn-secondary">搜索论文</button>
+                    <button id="downloadHistory" class="btn btn-secondary">下载历史</button>
+                </div>
+            </section>
+            
+            <section class="feature-section">
+                <h3>下载设置</h3>
+                <div class="setting-item">
+                    <label for="downloadPath">下载路径</label>
+                    <div class="path-input">
+                        <input type="text" id="downloadPath" placeholder="选择下载文件夹" readonly>
+                        <button id="selectPath" class="btn btn-small">选择</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
